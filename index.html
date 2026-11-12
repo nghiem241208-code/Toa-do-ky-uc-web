@@ -270,6 +270,8 @@ textarea.field{min-height:100px;resize:vertical}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes popIn{from{opacity:0;transform:translateY(24px) scale(.94)}to{opacity:1;transform:none}}
 @keyframes floaty{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,-40px) scale(1.15)}}
+@keyframes pinBounce{0%,100%{transform:translate(-50%,-50%) translateY(-11px) rotate(-45deg)}50%{transform:translate(-50%,-50%) translateY(-16px) rotate(-45deg)}}
+@keyframes ringBeat{0%,100%{transform:translate(-50%,-50%) scale(.92)}50%{transform:translate(-50%,-50%) scale(1.12)}}
 @keyframes pulseRing{0%{transform:translate(-50%,-50%) scale(.6);opacity:.9}100%{transform:translate(-50%,-50%) scale(1.7);opacity:0}}
 @keyframes stamp{0%{transform:scale(0) rotate(-40deg)}60%{transform:scale(1.5) rotate(8deg)}100%{transform:scale(1) rotate(0)}}
 @keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
@@ -309,7 +311,12 @@ textarea.field{min-height:100px;resize:vertical}
   border:3px solid var(--mint);background:radial-gradient(circle,rgba(52,211,153,.4),transparent 70%);
   transform:translate(-50%,-50%) scale(.4);opacity:0;transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .25s;pointer-events:none}
 .hotspot-area:hover .ring,.hotspot-area:focus-visible .ring,.hotspot-area.sel .ring{transform:translate(-50%,-50%) scale(1);opacity:1}
-.hotspot-area.hit .ring{opacity:1;transform:translate(-50%,-50%) scale(1);animation:pulseRing 1.6s ease-out infinite}
+.hotspot-area.hit .ring{display:block!important;opacity:1;width:16px;height:16px;aspect-ratio:auto;border-radius:50% 50% 50% 0;border:0;
+  background:#0a7030;box-shadow:0 0 0 1.5px #fff,0 3px 6px rgba(0,0,0,.35);
+  transform:translate(-50%,-50%) translateY(-11px) rotate(-45deg);animation:pinBounce 1.2s ease-in-out infinite;z-index:3}
+.hotspot-area.hit .ring::after{content:"";position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;background:#fff6ff}
+.hotspot-area.hit .lbl{opacity:1;top:-6%;transform:translate(-50%,-100%);font-size:11px;padding:4px 9px}
+.hotspot-area.hit.sel .ring{background:#0a7030}
 .hotspot-area.sel .ring{border-color:var(--pink);background:radial-gradient(circle,rgba(244,63,94,.3),transparent 70%)}
 .hotspot-area .lbl{position:absolute;left:50%;top:6%;transform:translate(-50%,-100%) translateY(8px);white-space:nowrap;
   background:#0f172a;color:white;font-size:12px;font-weight:800;padding:6px 12px;border-radius:30px;opacity:0;pointer-events:none;
@@ -433,7 +440,7 @@ textarea.field{min-height:100px;resize:vertical}
       <a href="https://heyzine.com/flip-book/071f2c4e68.html" data-book target="_blank" rel="noopener noreferrer" class="menu-btn">
         <span class="menu-icon">📖</span><span data-i18n="vnHeritage">Di sản Việt Nam</span>
       </a>
-      <a href="https://heyzine.com/flip-book/f351e67ee2.html" data-book target="_blank" rel="noopener noreferrer" class="menu-btn">
+      <a href="https://heyzine.com/flip-book/43697032d3.html" data-book target="_blank" rel="noopener noreferrer" class="menu-btn">
         <span class="menu-icon">🌾</span><span data-i18n="ctHeritage">Di sản Cần Thơ</span>
       </a>
       <div class="side-label" data-i18n="myJourney">Hành trình của tôi</div>
@@ -850,7 +857,7 @@ function renderChips(){
  const kinds=Object.keys(KIND_EMOJI);
  const chip=(k,label,n)=>`<button class="chip ${kindFilter===k?"on":""}" data-kind="${k}">${label} <em>${n}</em></button>`;
  box.innerHTML=chip("all","🌿 "+t("all"),places.length)+kinds.map(k=>chip(k,KIND_EMOJI[k]+" "+escapeHTML(t("kinds")[k]),places.filter(p=>p.k===k).length)).join("");
- box.querySelectorAll("[data-kind]").forEach(b=>b.addEventListener("click",()=>{kindFilter=b.dataset.kind;renderHotspots();}));
+ box.querySelectorAll("[data-kind]").forEach(b=>b.addEventListener("click",()=>{kindFilter=(kindFilter===b.dataset.kind)?"all":b.dataset.kind;renderHotspots();}));
 }
 function renderHotspots(){
  const layer=$("hotspots");layer.innerHTML="";
